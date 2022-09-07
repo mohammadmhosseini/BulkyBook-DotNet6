@@ -63,7 +63,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _hostEnvironment.WebRootPath;
-                if(file != null)
+                if (file != null)
                 {
                     string fileName = Guid.NewGuid().ToString();
                     var perfix = @$"images\products\{DateTime.Now.Year}\{DateTime.Now.Month}\{DateTime.Now.Day}";
@@ -110,7 +110,24 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             var productList = _unitOfWork.Product.GetAll(includeProperties: "Category,CoverType");
-            return Json( new { data = productList });
+            return Json(new { data = productList });
+        }
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var obj = _unitOfWork.Product.GetFirstOrDefault(c => c.Id == id);
+            if (obj == null)
+                return Json(new { success = false, message = "محصول حذف نشد" });
+
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl).TrimStart('\\');
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Product.Remove(obj);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "محصول باموفقیت حذف شد" });
         }
         [HttpDelete]
         public IActionResult Delete(int? id)
