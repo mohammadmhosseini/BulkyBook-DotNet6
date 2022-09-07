@@ -3,6 +3,7 @@ using BulkyBook.Model;
 using BulkyBook.Model.View_Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace BulkyBookWeb.Areas.Admin.Controllers
 {
@@ -110,6 +111,23 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         {
             var productList = _unitOfWork.Product.GetAll(includeProperties: "Category,CoverType");
             return Json(new { data = productList });
+        }
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var obj = _unitOfWork.Product.GetFirstOrDefault(c => c.Id == id);
+            if (obj == null)
+                return Json(new { success = false, message = "محصول حذف نشد" });
+
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl).TrimStart('\\');
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Product.Remove(obj);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "محصول باموفقیت حذف شد" });
         }
         [HttpDelete]
         public IActionResult Delete(int? id)
