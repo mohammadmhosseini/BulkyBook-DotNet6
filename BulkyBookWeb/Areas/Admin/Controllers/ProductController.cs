@@ -45,17 +45,14 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             if (id == null || id == 0)
             {
                 //create product
-
-                //ViewBag.CategoryList = CategoryList;
-                //ViewData["CoverTypeList"] = CoverTypeList;
-
                 return View(productVM);
             }
             else
             {
                 //update product
+                productVM.product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == id);
+                return View(productVM);
             }
-            return View();
         }
 
         [HttpPost]
@@ -65,7 +62,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _hostEnvironment.WebRootPath;
-                if(file != null)
+                if (file != null)
                 {
                     string fileName = Guid.NewGuid().ToString();
                     var perfix = @$"images\products\{DateTime.Now.Year}\{DateTime.Now.Month}\{DateTime.Now.Day}";
@@ -77,14 +74,31 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                         Directory.CreateDirectory(uploads);
                     }
 
+                    if (obj.product.ImageUrl != null)
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, obj.product.ImageUrl).TrimStart('\\');
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
                     using var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create);
                     file.CopyTo(fileStream);
 
                     obj.product.ImageUrl = perfix + "\\" + fileName + extension;
                 }
-                _unitOfWork.Product.Add(obj.product);
+                if (obj.product.Id == 0)
+                {
+                    _unitOfWork.Product.Add(obj.product);
+                    TempData["success"] = "محصول باموفقیت ایجاد شد.";
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(obj.product);
+                    TempData["success"] = "محصول باموفقیت ویرایش شد";
+                }
                 _unitOfWork.Save();
-                TempData["success"] = "محصول باموفقیت ایجاد شد.";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -95,33 +109,25 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         public IActionResult GetAll()
         {
             var productList = _unitOfWork.Product.GetAll(includeProperties: "Category,CoverType");
-            return Json( new { data = productList });
+            return Json(new { data = productList });
+        }
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var obj = _unitOfWork.Product.GetFirstOrDefault(c => c.Id == id);
+            if (obj == null)
+                return Json(new { success = false, message = "محصول حذف نشد" });
+
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl).TrimStart('\\');
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Product.Remove(obj);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "محصول باموفقیت حذف شد" });
         }
         #endregion
-
-        //Get
-        //public IActionResult Delete(int? id)
-        //{
-        //    if (id == null || id == 0)
-        //        return NotFound();
-        //    var coverTypeFromDb = _unitOfWork.CoverType.GetFirstOrDefault(c => c.Id == id);
-        //    if (coverTypeFromDb == null)
-        //        return NotFound();
-        //    return View(coverTypeFromDb);
-        //}
-
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult DeletePost(int? id)
-        //{
-        //    var obj = _unitOfWork.CoverType.GetFirstOrDefault(c => c.Id == id);
-        //    if (obj == null)
-        //        return NotFound();
-        //    _unitOfWork.CoverType.Remove(obj);
-        //    _unitOfWork.Save();
-        //    TempData["success"] = "نوع پوشش باموفقیت حذف شد.";
-        //    return RedirectToAction("Index");
-
-        //}
     }
 }
