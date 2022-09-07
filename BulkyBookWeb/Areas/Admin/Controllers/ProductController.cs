@@ -129,23 +129,4 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             _unitOfWork.Save();
             return Json(new { success = true, message = "محصول باموفقیت حذف شد" });
         }
-        [HttpDelete]
-        public IActionResult Delete(int? id)
-        {
-            var obj = _unitOfWork.Product.GetFirstOrDefault(c => c.Id == id);
-            if (obj == null)
-                return Json(new { success = false, message = "محصول حذف نشد" });
-
-            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl).TrimStart('\\');
-            if (System.IO.File.Exists(oldImagePath))
-            {
-                System.IO.File.Delete(oldImagePath);
-            }
-
-            _unitOfWork.Product.Remove(obj);
-            _unitOfWork.Save();
-            return Json(new { success = true, message = "محصول باموفقیت حذف شد" });
-        }
-        #endregion
-    }
 }
