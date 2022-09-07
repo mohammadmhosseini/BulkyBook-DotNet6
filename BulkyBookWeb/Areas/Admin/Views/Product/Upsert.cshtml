@@ -1,85 +1,108 @@
 ﻿@model BulkyBook.Model.View_Models.ProductVM
 
 <form method="post" enctype="multipart/form-data">
-    <div class="border p-3 mt-4 row">
-        <div class="row pb-2">
-            <h2 class="text-primary">@(Model.product.Id != 0 ? "ویرایش" : "ایجاد") محصول</h2>
-        </div>
-        @*<div asp-validation-summary="All" class="text-danger"></div>*@
-        <div class="mb-3">
-            <label asp-for="product.Title"></label>
-            <input asp-for="product.Title" class="form-control" />
-            <span asp-validation-for="product.Title" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="product.Description"></label>
-            <textarea asp-for="product.Description" rows="3" class="form-control"></textarea>
-            <span asp-validation-for="product.Description" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.ISBN"></label>
-            <input asp-for="product.ISBN" class="form-control" />
-            <span asp-validation-for="product.ISBN" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.Author"></label>
-            <input asp-for="product.Author" class="form-control" />
-            <span asp-validation-for="product.Author" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.ListPrice"></label>
-            <input asp-for="product.ListPrice" class="form-control" />
-            <span asp-validation-for="product.ListPrice" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.Price"></label>
-            <input asp-for="product.Price" class="form-control" />
-            <span asp-validation-for="product.Price" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.Price50"></label>
-            <input asp-for="product.Price50" class="form-control" />
-            <span asp-validation-for="product.Price50" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.Price100"></label>
-            <input asp-for="product.Price100" class="form-control" />
-            <span asp-validation-for="product.Price100" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="product.ImageUrl"></label>
-            <input type="file" name="file" id="UploadBox" class="form-control" />
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.CategoryId"></label>
-            <select asp-for="product.CategoryId" asp-items="@Model.CategoryList" class="form-select">
-                <option disabled selected>--انتخاب دسته بندی--</option>
-            </select>
-            <span asp-validation-for="product.CategoryId" class="text-danger"></span>
-        </div>
-        <div class="mb-3 col-6">
-            <label asp-for="product.CoverTypeId"></label>
-            <select asp-for="product.CoverTypeId" asp-items="@Model.CoverTypeList" class="form-select">
-                <option disabled selected>--انتخاب پوشش--</option>
-            </select>
-            <span asp-validation-for="product.CoverTypeId" class="text-danger"></span>
-        </div>
+    <input asp-for="product.Id" type="hidden"/>
+    <input asp-for="product.ImageUrl" type="hidden"/>
 
-        <div class="col-12">
-            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary" style="width:150px">بازگشت به لیست</a>
-            @if(Model.product.Id != 0){
-                <button type="submit" class="btn btn-outline-primary" style="width:150px">ویرایش</button>
-            }
-            else{
-                <button type="submit" onclick="return ValidateInput()" class="btn btn-outline-primary" style="width:150px">ایجاد</button>
-            }
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">@(Model.product.Id != 0 ? "ویرایش" : "ایجاد") محصول</h2>
+                </div>
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                <div class="mb-3">
+                    <label asp-for="product.Title">عنوان</label>
+                    <input asp-for="product.Title" class="form-control" />
+                    <span asp-validation-for="product.Title" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="product.Description">توضیحات</label>
+                    <textarea asp-for="product.Description" rows="3" class="form-control"></textarea>
+                    <span asp-validation-for="product.Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.ISBN"></label>
+                    <input asp-for="product.ISBN" class="form-control" />
+                    <span asp-validation-for="product.ISBN" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.Author">نویسنده</label>
+                    <input asp-for="product.Author" class="form-control" />
+                    <span asp-validation-for="product.Author" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.ListPrice"></label>
+                    <input asp-for="product.ListPrice" class="form-control" />
+                    <span asp-validation-for="product.ListPrice" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.Price"></label>
+                    <input asp-for="product.Price" class="form-control" />
+                    <span asp-validation-for="product.Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.Price50"></label>
+                    <input asp-for="product.Price50" class="form-control" />
+                    <span asp-validation-for="product.Price50" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.Price100"></label>
+                    <input asp-for="product.Price100" class="form-control" />
+                    <span asp-validation-for="product.Price100" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="product.ImageUrl">آدرس عکس</label>
+                    <input type="file" name="file" id="UploadBox" class="form-control" />
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.CategoryId"></label>
+                    <select asp-for="product.CategoryId" asp-items="@Model.CategoryList" class="form-select">
+                        <option disabled selected>--انتخاب دسته بندی--</option>
+                    </select>
+                    <span asp-validation-for="product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-6">
+                    <label asp-for="product.CoverTypeId"></label>
+                    <select asp-for="product.CoverTypeId" asp-items="@Model.CoverTypeList" class="form-select">
+                        <option disabled selected>--انتخاب پوشش--</option>
+                    </select>
+                    <span asp-validation-for="product.CoverTypeId" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary" style="width:150px">بازگشت به لیست</a>
+                    @if (Model.product.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-outline-primary" style="width:150px">ویرایش</button>
+                    }
+                    else
+                    {
+                        <button type="submit" onclick="return ValidateInput()" class="btn btn-outline-primary" style="width:150px">ایجاد</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-2 pt-4">
+            <img src="@Model.product.ImageUrl"
+            width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
         </div>
     </div>
+
+    
 </form>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+        });
         function ValidateInput(){
             if(document.getElementById("UploadBox").value == ""){
                 Swal.fire({
