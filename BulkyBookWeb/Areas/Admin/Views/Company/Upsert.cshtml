@@ -1,0 +1,66 @@
+﻿@model Company
+
+<form method="post" enctype="multipart/form-data">
+    @*<input asp-for="Id" hidden />*@
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">@(Model.Id != 0 ? "ویرایش" : "ایجاد") شرکت</h2>
+                </div>
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                <div class="mb-3">
+                    <label asp-for="Name">نام</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="StreetAddress">آدرس</label>
+                    <input asp-for="StreetAddress" class="form-control" />
+                    <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Province">استان</label>
+                    <input asp-for="Province" class="form-control" />
+                    <span asp-validation-for="Province" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="City">شهر</label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="PostalCode">کد پستی</label>
+                    <input asp-for="PostalCode" class="form-control" />
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber">شماره تماس</label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <a asp-controller="Company" asp-action="Index" class="btn btn-outline-secondary" style="width:150px">بازگشت به لیست</a>
+                    @if (Model.Id != 0)
+                    {
+                        <button type="submit" class="btn btn-outline-primary" style="width:150px">ویرایش</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-outline-primary" style="width:150px">ایجاد</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-2 pt-4">
+        </div>
+    </div>
+
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -20,8 +20,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<CoverType> objCoverTypeList = _unitOfWork.CoverType.GetAll();
-            return View(objCoverTypeList);
+            IEnumerable<Product> objProductList = _unitOfWork.Product.GetAll();
+            return View(objProductList);
         }
 
         //Get
@@ -129,4 +129,6 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             _unitOfWork.Save();
             return Json(new { success = true, message = "محصول باموفقیت حذف شد" });
         }
+    }
 }
+#endregion
